@@ -74,7 +74,7 @@ export default {
       const email = prompt("Por favor ingrese su email :");
       const auth = getAuth();
       const actionCodeSettings = {
-        url: `https://didactic-dollop-vqj6x6r9w99hw796-8080.app.github.dev/products/${this.$route.params.productId}`,
+        url: `https://full-stack-vue-ar-deployment.onrender.com/products/${this.$route.params.productId}`,
         handleCodeInApp: true,
       };
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
