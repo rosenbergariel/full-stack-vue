@@ -12,8 +12,42 @@ async function start() {
   const app = express();
   app.use(express.json());
 
-  app.use('/images', express.static(path.join(__dirname, '../assets')));
+  // app.use('/images', express.static(path.join(__dirname, '../assets')));
 
+  app.get("/images/:filename", async (req, res) => {
+    try {
+      await mongoClient.connect()
+  
+      const database = mongoClient.db("fsv-db")
+  
+      const imageBucket = new GridFSBucket(database, {
+        bucketName: "images",
+      })
+  
+      let downloadStream = imageBucket.openDownloadStreamByName(
+        req.params.filename
+      )
+  
+      downloadStream.on("data", function (data) {
+        return res.status(200).write(data)
+      })
+  
+      downloadStream.on("error", function (data) {
+        return res.status(404).send({ error: "Image not found" })
+      })
+  
+      downloadStream.on("end", () => {
+        return res.end()
+      })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        message: "Error Something went wrong",
+        error,
+      })
+    }
+  })
+  
   app.use(express.static(
     path.resolve(__dirname, '../dist'),
     { maxAge: '1y', etag: false },
