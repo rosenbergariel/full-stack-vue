@@ -2,7 +2,6 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import path from 'path';
 const GridFSBucket = require("mongodb").GridFSBucket;
-const { GridFsStorage } = require("multer-gridfs-storage");
 
 async function start() {
   const url = `mongodb+srv://rosenbergariel:1234@cluster0.fuqkbhz.mongodb.net/?retryWrites=true&w=majority`
