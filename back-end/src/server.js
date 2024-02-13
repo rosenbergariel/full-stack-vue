@@ -1,6 +1,8 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import path from 'path';
+const GridFSBucket = require("mongodb").GridFSBucket;
+const { GridFsStorage } = require("multer-gridfs-storage");
 
 async function start() {
   const url = `mongodb+srv://rosenbergariel:1234@cluster0.fuqkbhz.mongodb.net/?retryWrites=true&w=majority`
@@ -16,11 +18,8 @@ async function start() {
 
   app.get("/images/:filename", async (req, res) => {
     try {
-      await mongoClient.connect()
-  
-      const database = mongoClient.db("fsv-db")
-  
-      const imageBucket = new GridFSBucket(database, {
+
+      const imageBucket = new GridFSBucket(db, {
         bucketName: "images",
       })
   
@@ -47,7 +46,7 @@ async function start() {
       })
     }
   })
-  
+
   app.use(express.static(
     path.resolve(__dirname, '../dist'),
     { maxAge: '1y', etag: false },
